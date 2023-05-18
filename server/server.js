@@ -40,9 +40,9 @@ require("./routes/route.routes")(app);
 require("./routes/event.routes")(app)
 
 // Para comprobar que funciona 
-// app.get("/", (req, res) => {
-//   res.json({ message: "Bienvenido a la aplicación" });
-// });
+app.get("/", (req, res) => {
+  res.json({ message: "Bienvenido a la aplicación" });
+});
 
 // Actualmente no guardamos las imagenes en nuestro servidor por lo que esta ruta se encuentra comentada
 
