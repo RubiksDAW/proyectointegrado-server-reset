@@ -112,14 +112,14 @@ exports.login = async (req, res) => {
       // Buscamos un usuario por su nick. Si se encuentra en nuestra db se creará correctamente. Tambien nos traemos los ObjectId de los roles asociados
         const user = await User.findOne({ nick: req.body.nick }).populate("roles", "-__v")
       // Si no hay usuario devolvemos un error. 
-        if (!user) return res.status(404).send({ message: "Usuario no encontrado" })
+        if (!user) return res.status(404).send({ message: "Usuario y/o contraseña invalidos" })
       // Comparamos las contraseña que ha introducido el usuario con la que está almacenadas
         const passwordIsValid = bcrypt.compareSync(req.body.password, user.password)
       //  Si no es correcta se devuelve un mensaje de error
         if (!passwordIsValid)
             return res.status(401).send({
                 accessToken: null,
-                message: "Contraseña incorrecta"
+                message: "Usuario y/o contraseña incorrectos"
             })
 
         // Generamos un token para la sesión y le asignamos un tiempo de vida (1 año)
