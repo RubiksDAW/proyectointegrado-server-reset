@@ -465,7 +465,7 @@ exports.resetPassword = async (req, res) => {
       }).save();
     }
 
-    const link = `http://localhost:3300/password-reset/${user._id}/${token.token}`;
+    const link = `https://bikebrosv2.herokuapp.com/password-reset/${user._id}/${token.token}`;
 
     await sendEmail(user.email, "Restablecimiento de contraseña", link);
 
