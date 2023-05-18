@@ -45,4 +45,10 @@ module.exports = function (app) {
     app.get("/favs/:userId", controlador.getFavoriteRoutes)
     // Ruta para devolver la lista de rutas favoritas
     app.get("/favs/view/:userId", controlador.getFavoriteRoutesView)
+
+    app.post("/api/auth/reset-password", controlador.resetPassword);
+
+    app.get('/password-reset/:userId/:token', controlador.resetPasswordPage);
+
+    app.post("/password-reset", controlador.changePassword)
 }

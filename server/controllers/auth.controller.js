@@ -443,6 +443,89 @@ exports.getFavoriteRoutesView = async (req, res) => {
   }
 };
 
+exports.resetPassword = async (req, res) => {
+
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).send("Debe proporcionar un correo electrónico");
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).send("No existe un usuario con el correo electrónico proporcionado");
+    }
+
+    let token = await Token.findOne({ userId: user._id });
+    if (!token) {
+      token = await new Token({
+        userId: user._id,
+        token: crypto.randomBytes(32).toString("hex"),
+      }).save();
+    }
+
+    const link = `http://localhost:3300/password-reset/${user._id}/${token.token}`;
+
+    await sendEmail(user.email, "Restablecimiento de contraseña", link);
+
+    res.send("Se ha enviado un enlace de restablecimiento de contraseña a tu cuenta de correo electrónico");
+  } catch (error) {
+    res.send("Ocurrió un error");
+    console.log(error);
+  }
+};
+
+
+
+exports.resetPasswordPage = async (req, res) => {
+  try {
+    const { userId, token } = req.params;
+    const templatePath = path.join(__dirname, '../config/reset-password.html');
+
+    // Renderizar la plantilla con los valores de userId y token
+    const renderedTemplate = await ejs.renderFile(templatePath, { userId, token });
+
+    res.send(renderedTemplate);
+  } catch (error) {
+    res.status(500).send('Error al cargar la página de restablecimiento de contraseña');
+  }
+};
+
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { userId, token, password, confirmPassword } = req.body;
+    console.log(req.body)
+
+    // Verificar si la contraseña y la confirmación coinciden
+    if (password !== confirmPassword) {
+      return res.status(400).send({ message: 'La contraseña y la confirmación no coinciden' });
+    }
+
+    // Obtener el usuario correspondiente al userId
+    const user = await User.findById(userId);
+
+    // Verificar si el usuario existe y si el token es válido
+    if (!user) {
+      return res.status(400).send({ message: 'Token inválido o usuario no encontrado' });
+    }
+
+    // Actualizar la contraseña del usuario
+    const hashedPassword = await bcrypt.hash(password, 8);
+    user.password = hashedPassword;
+    
+
+    // Guardar los cambios en la base de datos
+    await user.save();
+
+    return res.status(200).send({ message: 'Contraseña restablecida exitosamente' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: error.message || 'Ha ocurrido un error al restablecer la contraseña' });
+  }
+};
+
 
 
 
