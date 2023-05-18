@@ -27,5 +27,7 @@ module.exports = function (app) {
     // Ruta para eliminar un evento por su id
     app.delete("/api/deleteEvent/:eventId", controllerEvent.deleteEventById);
 
+    app.get("/api/getEventsJoined/:userId", controllerEvent.getEventsJoined)
+
 
 }

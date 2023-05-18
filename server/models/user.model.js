@@ -52,6 +52,16 @@ UserSchema.virtual('totalComments',{
   return this.model('Comments').countDocuments({authorid: this._id});
 })
 
+// Propiedad virtual para calcular el numero de evento en los cuales se ha apuntado el usuario
+UserSchema.virtual('totalEventsJoined', {
+  ref: 'Event',
+  localField: '_id',
+  foreignField: 'participantes',
+  count: true
+}).get(function() {
+  return this.model('Event').countDocuments({ participantes: this._id });
+});
+
 // UserSchema.virtual('numberOfRoutes', {
 //   ref: 'Route',
 //   localField: '_id',

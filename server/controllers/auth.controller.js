@@ -266,7 +266,7 @@ console.log(req.params)
   const userNick = req.params.nick.trim().toLowerCase(); 
 
   // asegurarse de que no haya espacios en blanco y todo sea en minúsculas
-  const userAlreadyExist = await User.findOne({ nick: userNick }).populate('totalRoutes').populate('totalEvents').populate('totalComments').lean();
+  const userAlreadyExist = await User.findOne({ nick: userNick }).populate('totalRoutes').populate('totalEvents').populate('totalComments').populate('totalEventsJoined').lean();
   // const userAlreadyExist = await User.findOne({ nick: userNick });
   // En caso de encontrarlo lo devuelve. Sino devuelve un 404
   if (userAlreadyExist) {
