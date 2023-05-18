@@ -3,7 +3,12 @@ const config = require("../config/auth.config")
 // importamos los modelos en "db"
 const db = require("../models")
 
+const Token = require("../models/token.model")
+
+const sendEmail = require("../config/sendEmail.js")
 // const { ObjectId } = require('mongoose').Types;
+
+const crypto = require("crypto");
 
 const User = db.user;
 
@@ -16,6 +21,7 @@ let jwt = require("jsonwebtoken")
 
 // IMportamos bcrypt para el hashing de contraseñas y que no se almacenen sin encryptar
 let bcrypt = require("bcrypt")
+
 
 // Importamos el array de palabras baneadas
 const bannedWords = require('../config/bans.words')
@@ -444,7 +450,7 @@ exports.getFavoriteRoutesView = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-
+  console.log("hola")
   try {
     const { email } = req.body;
 
