@@ -5,6 +5,10 @@ const db = require("../models")
 
 const Token = require("../models/token.model")
 
+const path = require('path')
+
+const ejs = require('ejs')
+
 const sendEmail = require("../config/sendEmail.js")
 // const { ObjectId } = require('mongoose').Types;
 
@@ -471,7 +475,8 @@ exports.resetPassword = async (req, res) => {
       }).save();
     }
 
-    const link = `https://bikebrosv2.herokuapp.com/password-reset/${user._id}/${token.token}`;
+    // const link = `https://bikebrosv2.herokuapp.com/password-reset/${user._id}/${token.token}`;
+    const link = `http://localhost:3300/password-reset/${user._id}/${token.token}`;
 
     await sendEmail(user.email, "Restablecimiento de contraseña", link);
 
@@ -494,6 +499,7 @@ exports.resetPasswordPage = async (req, res) => {
 
     res.send(renderedTemplate);
   } catch (error) {
+    console.log(error)
     res.status(500).send('Error al cargar la página de restablecimiento de contraseña');
   }
 };
