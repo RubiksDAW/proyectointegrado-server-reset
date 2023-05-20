@@ -34,7 +34,7 @@ module.exports = function (app) {
     // Ruta para eliminar un usuario por su id única
     app.delete("/:id", controlador.deleteUser);
     // Ruta para modificar la información de nuestro usuario
-    app.put("/:id", controlador.editProfile);
+    app.put("/:id", upload.array('images',1) ,controlador.editProfile);
     // Ruta para comprobar si el usuario es admin
     app.get ("/api/auth/idAdmin/:id", controlador.isAdmin)
     // Ruta para añadir una ruta a la lista de rutas favortias  

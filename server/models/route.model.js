@@ -22,7 +22,9 @@ const RouteSchema = new mongoose.Schema({
   // Id del usuario que ha creado la ruta
   author: { type: String, required: false },
   // Array de comentarios asociados a la ruta
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment", required:false}]
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment", required:false}],
+
+  reports:[{ type: mongoose.Schema.Types.ObjectId, ref: "Report", required:false}]
 });
 
 const Route = mongoose.model("Route", RouteSchema);

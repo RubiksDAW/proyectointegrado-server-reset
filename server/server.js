@@ -36,6 +36,7 @@ app.use(router)
 
 // Llamamos a nuestros distintos 
 require("./routes/auth.routes")(app);
+require("./routes/report.routes")(app)
 require("./routes/route.routes")(app);
 require("./routes/event.routes")(app)
 

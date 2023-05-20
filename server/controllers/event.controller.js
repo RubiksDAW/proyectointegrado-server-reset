@@ -81,19 +81,25 @@ exports.getEventById = async (req, res) => {
 
 // Método para modificar un evento existente
 exports.updateEventById = async (req, res) => {
+  console.log("Hola?");
+  const id = req.params.eventId;
+  console.log(req.params);
   try {
-    const event = await Event.findById(req.params.id);
-    if (event) {
+    const eventId = await Event.findById(id);
+    if (eventId) {
+      const modifiedData = {
+        ruta: req.body.ruta,
+        fecha: req.body.fecha,
+        participantes: req.body.participantes,
+        maxParticipantes: req.body.maxParticipantes,
+      };
+      console.log(modifiedData);
 
-      // Reasignamos los valores de nuestro evento 
-      event.ruta = req.body.ruta;
-      event.fecha = req.body.fecha;
-      event.participantes = req.body.participantes;
-      event.maxParticipantes = req.body.maxParticipantes;
+      const modifiedEvent = await Event.findByIdAndUpdate(id, modifiedData, { new: true });
 
       // Guardamos el evento y lo devolvemos
-      await event.save();
-      res.status(200).json({ message: 'Evento modificado exitosamente', event: event });
+      await modifiedEvent.save();
+      res.status(200).json({ message: 'Evento modificado exitosamente', event: modifiedEvent });
     } else {
       res.status(404).json({ message: 'Evento no encontrado' });
     }
@@ -102,6 +108,7 @@ exports.updateEventById = async (req, res) => {
     res.status(500).json({ message: 'Error al modificar el evento' });
   }
 };
+
 
 // Método para borrar un evento existente
 exports.deleteEventById = async (req, res) => {

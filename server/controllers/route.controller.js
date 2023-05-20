@@ -99,8 +99,9 @@ exports.modifyRoute = async (req, res) => {
 
 // Método para controlar 
 exports.getAllRoutes = async (req, res) => {
+  
   try {
-    // Comprobamos si en la petición nos llega una palabra clave para filtrar las rutas que se van a devolver
+  // Comprobamos si en la petición nos llega una palabra clave para filtrar las rutas que se van a devolver
   const searchTerm = req.query.searchTerm;
 
   const difficultyLevel = req.query.difficulty_level;
@@ -128,9 +129,8 @@ exports.getAllRoutes = async (req, res) => {
 
   } else if (difficultyLevel) {
     // Si solo se proporciona un nivel de dificultad, filtrar las rutas por nivel de dificultad
-    routes = await Route.find({
-      difficulty_level: difficultyLevel
-    });
+    routes = await Route.find({difficulty_level: difficultyLevel});
+
   } else {
     // Si no se proporcionan términos de búsqueda ni nivel de dificultad, devolver todas las rutas
     routes = await Route.find();

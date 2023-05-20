@@ -187,9 +187,21 @@ exports.profile = async (req, res) => {
 // Actualmente no es disponible actualizar la contraseña.
 exports.editProfile = async (req, res) => {
     try {
-      const { nick, email, age, description, imageURL} = req.body;
+      const { nick, email, age, description} = req.body;
       const { id } = req.params;
   
+      const galeria = req.files ? await Promise.all(req.files.map((file) => {
+        return new Promise((resolve, reject) => {
+          cloudinary.uploader.upload(file.path, (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result.secure_url);
+            }
+          });
+        });
+      })) : [];
+      
       // Buscamos al usuario por su ID en la base de datos
       const user = await User.findById(id);
   
@@ -226,8 +238,8 @@ exports.editProfile = async (req, res) => {
       }
 
       // Comprobamos si tenemos imagen de perfil que actualizar
-      if (imageURL) {
-        user.imageURL = imageURL;
+      if (galeria) {
+        user.imageURL = galeria;
       }
     // No se pueden modificar los roles actualmente
     //   if (roles) {
@@ -475,8 +487,8 @@ exports.resetPassword = async (req, res) => {
       }).save();
     }
 
-    const link = `https://bikebrosv2.herokuapp.com/password-reset/${user._id}/${token.token}`;
-    // const link = `http://localhost:3300/password-reset/${user._id}/${token.token}`;
+    // const link = `https://bikebrosv2.herokuapp.com/password-reset/${user._id}/${token.token}`;
+    const link = `http://localhost:3300/password-reset/${user._id}/${token.token}`;
 
     await sendEmail(user.email, "Restablecimiento de contraseña", link);
 
@@ -522,6 +534,7 @@ exports.changePassword = async (req, res) => {
     if (!user) {
       return res.status(400).send({ message: 'Token inválido o usuario no encontrado' });
     }
+    
 
     // Actualizar la contraseña del usuario
     const hashedPassword = await bcrypt.hash(password, 8);

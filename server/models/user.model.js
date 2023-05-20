@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
   favouriteRoutes: [{type:String, required: false}]
 }
 );
-
+// Propiedad virtual para calcular el numero de rutas totales creados por el usuario
 UserSchema.virtual('totalRoutes',{
       ref: 'Route',
       localField: '_id',
@@ -33,7 +33,7 @@ UserSchema.virtual('totalRoutes',{
 }).get(function() {
   return this.model('Route').countDocuments({author: this._id});
 });
-
+// Propiedad virtual para calcular el numero de eventos totales creados por el usuario
 UserSchema.virtual('totalEvents',{
   ref: 'Event',
   localField: '_id',
@@ -42,7 +42,7 @@ UserSchema.virtual('totalEvents',{
 }).get(function() {
   return this.model('Event').countDocuments({creador: this._id});
 })
-
+// Propiedad virtual para calcular el numero de comentarios totales que ha escrito un usuario
 UserSchema.virtual('totalComments',{
   ref: 'Comment',
   localField: '_id',
