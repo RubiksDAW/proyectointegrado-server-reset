@@ -97,50 +97,53 @@ exports.modifyRoute = async (req, res) => {
 };
 
 
-// Método para controlar 
+// Método para controlar la carga de rutas por página
 exports.getAllRoutes = async (req, res) => {
-  
   try {
-  // Comprobamos si en la petición nos llega una palabra clave para filtrar las rutas que se van a devolver
-  const searchTerm = req.query.searchTerm;
+    const searchTerm = req.query.searchTerm;
+    const difficultyLevel = req.query.difficulty_level;
+    console.log(req.query)
+    const page = parseInt(req.query.page) || 1; // Número de página, predeterminado: 1
+    const pageSize = parseInt(req.query.pageSize) || 5;
+    console.log(page)
+    console.log(pageSize)
+    // Tamaño de página, predeterminado: 5
 
-  const difficultyLevel = req.query.difficulty_level;
+    let query = {};
 
-  // creamos una variable para almacenar las rutas . 
-  let routes;
-  
-  if (searchTerm && difficultyLevel) {
-    // Si se proporcionan términos de búsqueda, filtrar las rutas por nombre, ubicación y nivel de dificultad
-    routes = await Route.find({
-      $and: [
-        { name: { $regex: searchTerm, $options: 'i' } },
-        { location: { $regex: searchTerm, $options: 'i' } },
-        { difficulty_level: difficultyLevel }
-      ]
-    });
-  } else if (searchTerm) {
-    // Si solo se proporciona un término de búsqueda, filtrar las rutas por nombre o ubicación
-    routes = await Route.find({
-      $or: [
-        { name: { $regex: searchTerm, $options: 'i' } },
-        { location: { $regex: searchTerm, $options: 'i' } }
-      ]
-    });
+    if (searchTerm && difficultyLevel) {
+      query = {
+        $and: [
+          { name: { $regex: searchTerm, $options: 'i' } },
+          { location: { $regex: searchTerm, $options: 'i' } },
+          { difficulty_level: difficultyLevel }
+        ]
+      };
+    } else if (searchTerm) {
+      query = {
+        $or: [
+          { name: { $regex: searchTerm, $options: 'i' } },
+          { location: { $regex: searchTerm, $options: 'i' } }
+        ]
+      };
+    } else if (difficultyLevel) {
+      query = { difficulty_level: difficultyLevel };
+    }
 
-  } else if (difficultyLevel) {
-    // Si solo se proporciona un nivel de dificultad, filtrar las rutas por nivel de dificultad
-    routes = await Route.find({difficulty_level: difficultyLevel});
+    const totalRoutes = await Route.countDocuments(query); // Obtener el número total de rutas
+    console.log(totalRoutes)
+    const totalPages = Math.ceil(totalRoutes / pageSize); // Calcular el número total de páginas
 
-  } else {
-    // Si no se proporcionan términos de búsqueda ni nivel de dificultad, devolver todas las rutas
-    routes = await Route.find();
-  }
-  
-  res.send({ routes });
+    const routes = await Route.find(query)
+      .skip((page - 1) * pageSize) // Saltar los resultados anteriores a la página actual
+      .limit(pageSize); // Limitar el número de resultados por página
+    console.log(routes)
+    console.log(totalPages)
+    res.send({ routes, totalPages });
   } catch (error) {
-  res.status(500).send({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
-  };
+};
 
 // Metodo para encontrar rutas por su id
 exports.findRouteById = async (req, res) => {

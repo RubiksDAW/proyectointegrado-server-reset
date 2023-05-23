@@ -6,4 +6,7 @@ module.exports = function (app) {
     // Ruta para crear un evento
     app.post("/api/reports/:routeId",controllerReport.addReport )
     app.get("/api/showRouteReports/:routeId", controllerReport.getRouteReports)
+
+    app.post("/api/reportsEvent/:eventId", controllerReport.addReportEvent)
+    app.post("/api/showEventReports/:eventId")
 }

@@ -17,7 +17,9 @@ const Event = mongoose.model(
     // Variable numerica para controlar el máximo de participantes. No se establecerá un mínimo
     maxParticipantes: { type: Number, required: true },
     // Id del creador. Solo se guarda la id como String
-    creador: { type: String, required: true }
+    creador: { type: String, required: true },
+
+    reports:[{ type: mongoose.Schema.Types.ObjectId, ref: "Report", required:false}]
   })
 );
 

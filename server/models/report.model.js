@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const ReportSchema = new mongoose.Schema({
-  routeId:{type:String, required:true},
+  id:{type:String, required:true},
   reason: { type: String, required: true },
   description: { type: String, required: false },
 });
