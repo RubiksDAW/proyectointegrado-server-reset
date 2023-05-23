@@ -37,40 +37,73 @@ exports.createEvent = async (req, res) => {
 
 // Método para obtener todos los eventos
 
-// Método para obtener un evento específico
+// // Método para obtener un evento específico
+// exports.getAllEvents = async (req, res) => {
+//   try {
+//   const  searchTerm  = req.query.searchTerm;
+//   const page = parseInt(req.query.page) || 1; // Número de página, predeterminado: 1
+//   const pageSize = parseInt(req.query.pageSize) || 5;
+//   let events;
+//   let query = {}
+//   // let totalEvents = 0
+//   let totalPages = 0
+ 
+//     // Comprobamos si en la petición nos llegan palabras clave para realizar una busqueda
+//   if (searchTerm) {
+//     query = { $and: [{ ubicacion: { $regex: searchTerm, $options: 'i' } } ]
+//     }// Del evento nos traemos la ruta asociada así como los participantes para obtener información de ambas entidades
+//    const totalEvents = await Event.countDocuments(query);
+//      totalPages = Math.ceil(totalEvents / pageSize); // Calcular el número total de páginas
+
+//     events = await Event.find(query).populate('ruta')
+//       .populate('participantes')
+//       .skip((page - 1) * pageSize) // Saltar los resultados anteriores a la página actual
+//       .limit(pageSize);
+
+//   } else {
+//     // Si no ha llegado ninguna palabra clave se devuelven todos los eventos
+//     events = await Event.find().populate('ruta').populate('participantes');
+//   }
+//   // 
+//   res.send({ events, totalPages });
+//   } catch (error) {
+//   console.log(error);
+//   res.status(500).json({ message: 'Error al obtener los eventos' });
+//   }
+//   };
+
 exports.getAllEvents = async (req, res) => {
   try {
-  const  searchTerm  = req.query.searchTerm;
-  const page = parseInt(req.query.page) || 1; // Número de página, predeterminado: 1
-  const pageSize = parseInt(req.query.pageSize) || 5;
-  let events;
-  let query = {}
-  let totalEvents = 0
-  let totalPages = 0
- 
-    // Comprobamos si en la petición nos llegan palabras clave para realizar una busqueda
-  if (searchTerm) {
-    query = { $and: [{ ubicacion: { $regex: searchTerm, $options: 'i' } } ]
-    }// Del evento nos traemos la ruta asociada así como los participantes para obtener información de ambas entidades
-    totalEvents = await Event.countDocuments(query);
-    totalPages = Math.ceil(totalEvents / pageSize); // Calcular el número total de páginas
+    const searchTerm = req.query.searchTerm;
+    const page = parseInt(req.query.page) || 1; // Número de página, predeterminado: 1
+    const pageSize = parseInt(req.query.pageSize) || 5;
+    let events;
+    let query = {};
+    let totalPages = 0;
 
-    events = await Event.find(query).populate('ruta')
+    if (searchTerm) {
+      query = { $and: [{ ubicacion: { $regex: searchTerm, $options: 'i' } }] };
+
+      const totalEvents = await Event.countDocuments(query);
+      totalPages = Math.ceil(totalEvents / pageSize);
+    } else {
+      const totalEvents = await Event.countDocuments();
+      totalPages = Math.ceil(totalEvents / pageSize);
+    }
+
+    events = await Event.find(query)
+      .populate('ruta')
       .populate('participantes')
-      .skip((page - 1) * pageSize) // Saltar los resultados anteriores a la página actual
+      .skip((page - 1) * pageSize)
       .limit(pageSize);
 
-  } else {
-    // Si no ha llegado ninguna palabra clave se devuelven todos los eventos
-    events = await Event.find().populate('ruta').populate('participantes');
-  }
-  // 
-  res.send({ events, totalPages });
+    res.send({ events, totalPages });
   } catch (error) {
-  console.log(error);
-  res.status(500).json({ message: 'Error al obtener los eventos' });
+    console.log(error);
+    res.status(500).json({ message: 'Error al obtener los eventos' });
   }
-  };
+};
+
 
 // Método para obtener un evento específico por su id
 exports.getEventById = async (req, res) => {

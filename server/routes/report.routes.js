@@ -8,5 +8,5 @@ module.exports = function (app) {
     app.get("/api/showRouteReports/:routeId", controllerReport.getRouteReports)
 
     app.post("/api/reportsEvent/:eventId", controllerReport.addReportEvent)
-    app.post("/api/showEventReports/:eventId")
+    app.get("/api/report/showEventReports/:eventId", controllerReport.getEventReports)
 }

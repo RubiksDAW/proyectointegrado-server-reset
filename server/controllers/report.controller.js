@@ -1,27 +1,29 @@
 const Report = require('../models/report.model')
 const Route = require('../models/route.model')
 const Event = require('../models/event.model')
-exports.getRouteReports = async (req, res) => {
-  // console.log("adios")
-  try {
-    const { routeId } = req.params;
 
-    // Buscar la ruta por ID
-    const route = await Route.findById(routeId).populate("reports");
 
-    if (!route) {
-      return res.status(404).json({ message: "Ruta no encontrada" });
-    }
+// exports.getRouteReports = async (req, res) => {
+//   // console.log("adios")
+//   try {
+//     const { routeId } = req.params;
 
-    // Obtener los comentarios de la ruta
-    const reports = route.reports;
+//     // Buscar la ruta por ID
+//     const route = await Route.findById(routeId).populate("reports");
 
-    res.status(200).json({ reports });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error al obtener los comentarios de la ruta" });
-  }
-};
+//     if (!route) {
+//       return res.status(404).json({ message: "Ruta no encontrada" });
+//     }
+
+//     // Obtener los comentarios de la ruta
+//     const reports = route.reports;
+
+//     res.status(200).json({ reports });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Error al obtener los comentarios de la ruta" });
+//   }
+// };
 
 exports.addReport = async (req, res) => {
     console.log("hola")
@@ -110,19 +112,43 @@ exports.addReport = async (req, res) => {
   };
   
   exports.getEventReports = async (req, res) => {
-    // console.log("adios")
+    console.log("adios");
     try {
-      const { id } = req.params;
-  
-      // Buscar la ruta por ID
-      const event = await Event.findById(id).populate("reports");
+      console.log(req.params)
+      const { eventId } = req.params;
+      // console.log(id);
+      // Buscar el evento por ID
+      const event = await Event.findById(eventId).populate("reports");
   
       if (!event) {
-        return res.status(404).json({ message: "Evento no encontrada" });
+        return res.status(404).json({ message: "Evento no encontrado" });
+      }
+  
+      // Obtener los informes del evento
+      const reports = event.reports;
+  
+      res.status(200).json({ reports });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error al obtener los informes del evento" });
+    }
+  };
+  
+
+  exports.getRouteReports = async (req, res) => {
+    // console.log("adios")
+    try {
+      const { routeId } = req.params;
+  
+      // Buscar la ruta por ID
+      const route = await Route.findById(routeId).populate("reports");
+  
+      if (!route) {
+        return res.status(404).json({ message: "Ruta no encontrada" });
       }
   
       // Obtener los comentarios de la ruta
-      const reports = event.reports;
+      const reports = route.reports;
   
       res.status(200).json({ reports });
     } catch (error) {

@@ -102,7 +102,7 @@ exports.getAllRoutes = async (req, res) => {
   try {
     const searchTerm = req.query.searchTerm;
     const difficultyLevel = req.query.difficulty_level;
-    console.log(req.query)
+    // console.log(req.query)
     const page = parseInt(req.query.page) || 1; // Número de página, predeterminado: 1
     const pageSize = parseInt(req.query.pageSize) || 5;
     console.log(page)
