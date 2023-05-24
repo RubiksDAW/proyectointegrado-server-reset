@@ -156,3 +156,57 @@ exports.addReport = async (req, res) => {
       res.status(500).json({ message: "Error al obtener los comentarios de la ruta" });
     }
   };
+
+  exports.deleteRouteReportById = async (req, res) => {
+    try {
+      console.log(req.params)
+      const { reportId } = req.params;
+      const { routeId } = req.body;
+      console.log(reportId)
+      console.log(routeId)
+      // Buscar la ruta por ID y actualizar el array de informes
+      const updatedRoute = await Route.findOneAndUpdate(
+        { _id: routeId },
+        { $pull: { reports: reportId } },
+        { new: true }
+      );
+  
+      if (!updatedRoute) {
+        return res.status(404).json({ message: "Ruta no encontrada" });
+      }
+  
+      return res.status(200).json({ route: updatedRoute });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error al eliminar el informe" });
+    }
+  };
+
+  exports.deleteEventReportById = async (req, res) => {
+    try {
+      console.log(req.params)
+      const { reportId } = req.params;
+      const { eventId } = req.body;
+      console.log(reportId)
+      console.log(eventId)
+      // Buscar la ruta por ID y actualizar el array de informes
+      const updatedEvent = await Event.findOneAndUpdate(
+        { _id: eventId },
+        { $pull: { reports: reportId } },
+        { new: true }
+      );
+  
+      if (!updatedEvent) {
+        return res.status(404).json({ message: "Evento no encontrada" });
+      }
+  
+      return res.status(200).json({ event: updatedEvent });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error al eliminar el informe" });
+    }
+  };
+  
+  
+  
+  

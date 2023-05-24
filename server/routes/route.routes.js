@@ -20,4 +20,6 @@ module.exports = function (app) {
     app.get("/route/getAllComments/:routeId", controllerRoute.getRouteComments)
     // Ruta utilizada para modificar una ruta 
     app.put("/route/:routeId/modify",upload.array('images', 5),controllerRoute.modifyRoute)
+
+    app.delete("/route/comments/delete/:commentId", controllerRoute.deleteCommentById)
 }

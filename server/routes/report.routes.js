@@ -9,4 +9,6 @@ module.exports = function (app) {
 
     app.post("/api/reportsEvent/:eventId", controllerReport.addReportEvent)
     app.get("/api/report/showEventReports/:eventId", controllerReport.getEventReports)
+    app.delete("/api/reports/route/delete/:reportId", controllerReport.deleteRouteReportById)
+    app.delete("/api/reports/event/delete/:reportId", controllerReport.deleteEventReportById)
 }

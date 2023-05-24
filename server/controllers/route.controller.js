@@ -270,6 +270,33 @@ exports.getRouteComments = async (req, res) => {
   }
 };
 
+exports.deleteCommentById = async (req, res) => {
+  try {
+    const { commentId } = req.params;
+    const { routeId } = req.body;
+
+    // Buscar la ruta por ID y actualizar el array de comentarios
+    const updatedRoute = await Route.findOneAndUpdate(
+      { _id: routeId },
+      { $pull: { comments: commentId } },
+      { new: true }
+    );
+
+    if (!updatedRoute) {
+      return res.status(404).json({ message: "Ruta no encontrada" });
+    }
+
+    return res.status(200).json({ route: updatedRoute });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al eliminar el comentario" });
+  }
+};
+
+
+
+
+
 
   
   
