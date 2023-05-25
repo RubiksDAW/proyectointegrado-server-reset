@@ -250,7 +250,7 @@ exports.registerUserToEvent = async (req, res) => {
   exports.getEventsJoined = async(req,res)=>{
     try {
       const userId = req.params.userId;
-      const eventsJoined = await Event.find({ participantes: userId });
+      const eventsJoined = await Event.find({ participantes: userId }).populate('ruta');
   
       res.status(200).json(eventsJoined);
     } catch (error) {
