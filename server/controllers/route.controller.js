@@ -51,6 +51,7 @@ exports.register = async (req, res) => {
 
 // Método para modificar una ruta
 exports.modifyRoute = async (req, res) => {
+ console.log(req.body)
   try {
     // console.log(req.params.formData)
       const routeId = req.body._id;
@@ -68,6 +69,8 @@ exports.modifyRoute = async (req, res) => {
           });
         });
       });
+
+      
       // Guardamos en un objeto la información que nos llega en el cuerpo de la petición.
       const modifiedData = {
           name: req.body.name,
@@ -96,54 +99,35 @@ exports.modifyRoute = async (req, res) => {
   }
 };
 
+// Método para controlar 
+// exports.getAllRoutes = async (req, res) => {
+//   try {
+//     const routes = await Route.find();
+//     res.send({ routes });
+//   } catch (error) {
+//     res.status(500).send({ message: error.message });
+//   }
+// };
+
 
 // Método para controlar la carga de rutas por página
 exports.getAllRoutes = async (req, res) => {
   try {
-    const searchTerm = req.query.searchTerm;
-    const difficultyLevel = req.query.difficulty_level;
-    // console.log(req.query)
     const page = parseInt(req.query.page) || 1; // Número de página, predeterminado: 1
     const pageSize = parseInt(req.query.pageSize) || 5;
-    console.log(page)
-    console.log(pageSize)
-    // Tamaño de página, predeterminado: 5
-
-    let query = {};
-
-    if (searchTerm && difficultyLevel) {
-      query = {
-        $and: [
-          { name: { $regex: searchTerm, $options: 'i' } },
-          { location: { $regex: searchTerm, $options: 'i' } },
-          { difficulty_level: difficultyLevel }
-        ]
-      };
-    } else if (searchTerm) {
-      query = {
-        $or: [
-          { name: { $regex: searchTerm, $options: 'i' } },
-          { location: { $regex: searchTerm, $options: 'i' } }
-        ]
-      };
-    } else if (difficultyLevel) {
-      query = { difficulty_level: difficultyLevel };
-    }
-
-    const totalRoutes = await Route.countDocuments(query); // Obtener el número total de rutas
-    console.log(totalRoutes)
+    const totalRoutes = await Route.countDocuments(); // Obtener el número total de rutas
     const totalPages = Math.ceil(totalRoutes / pageSize); // Calcular el número total de páginas
-
-    const routes = await Route.find(query)
+    
+    const routes = await Route.find()
       .skip((page - 1) * pageSize) // Saltar los resultados anteriores a la página actual
       .limit(pageSize); // Limitar el número de resultados por página
-    console.log(routes)
-    console.log(totalPages)
+
     res.send({ routes, totalPages });
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
 };
+
 
 // Metodo para encontrar rutas por su id
 exports.findRouteById = async (req, res) => {
