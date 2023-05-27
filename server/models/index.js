@@ -17,6 +17,7 @@ db.role = require("./role.model")
 // db.route = require("./route.model")
 db.route = require("./route.model")
 
+db.message = require("./message.model")
 // Define un array de roles disponibles para los usuarios de la aplicación.
 db.ROLES = ["user","admin"];
 

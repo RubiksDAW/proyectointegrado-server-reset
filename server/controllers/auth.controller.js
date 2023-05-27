@@ -20,6 +20,7 @@ const Route = db.route;
 
 const Role = db.role;
 
+const Message = db.message;
 // Importamos JWT para crear y verificar tokens JWT
 let jwt = require("jsonwebtoken")
 
@@ -550,6 +551,99 @@ exports.changePassword = async (req, res) => {
     return res.status(500).send({ message: error.message || 'Ha ocurrido un error al restablecer la contraseña' });
   }
 };
+
+
+
+// Método para enviar un mensaje
+exports.sendMessage = async (req, res) => {
+ 
+  try {
+    const { sender, recipient, content } = req.body;
+    
+    // Verificar que tanto el remitente como el destinatario existan en la base de datos
+    const senderUser = await User.findById(sender);
+    const recipientUser = await User.findById(recipient);
+
+    if (!senderUser || !recipientUser) {
+      return res.status(404).json({ message: 'El remitente o el destinatario no existe' });
+    }
+
+    // Crear una instancia del modelo de Message
+    const message = new Message({
+      sender: sender,
+      recipient: recipient,
+      content: content,
+      createdAt: new Date(),
+    });
+
+    // Guardar el mensaje en la base de datos
+    await message.save();
+
+    // Guardar el mensaje en la lista de mensajes enviados del remitente
+    senderUser.messagesSent.push(message);
+    await senderUser.save();
+
+    // Guardar el mensaje en la lista de mensajes recibidos del destinatario
+    recipientUser.messagesReceived.push(message);
+    await recipientUser.save();
+
+    return res.status(200).json({ message: 'Mensaje enviado con éxito' });
+  } catch (error) {
+    console.error('Error al enviar el mensaje:', error);
+    return res.status(500).json({ message: 'Error al enviar el mensaje' });
+  }
+};
+
+
+
+// Método para obtener los mensajes recibidos por un usuario
+exports.getUserMessages = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Verificar que el usuario exista en la base de datos
+    const user = await User.findById(userId).populate({
+      path: 'messagesReceived',
+      populate: { path: 'sender', model: 'User' }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'El usuario no existe' });
+    }
+
+    const receivedMessages = user.messagesReceived;
+
+    console.log(receivedMessages);
+    return res.status(200).json(receivedMessages);
+  } catch (error) {
+    console.error('Error al obtener los mensajes del usuario:', error);
+    return res.status(500).json({ message: 'Error al obtener los mensajes del usuario' });
+  }
+};
+
+exports.getMessageById = async (req, res) => {
+  console.log(req.params)
+  try {
+    const messageId = req.params.messageId;
+
+    // Verificar que el mensaje exista en la base de datos
+    const message = await Message.findById(messageId).populate('sender');;
+
+    if (!message) {
+      return res.status(404).json({ message: 'El mensaje no existe' });
+    }
+
+    return res.status(200).json(message);
+  } catch (error) {
+    console.error('Error al obtener el mensaje:', error);
+    return res.status(500).json({ message: 'Error al obtener el mensaje' });
+  }
+};
+
+
+
+
+
 
 
 

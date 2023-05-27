@@ -51,4 +51,10 @@ module.exports = function (app) {
     app.get('/password-reset/:userId/:token', controlador.resetPasswordPage);
 
     app.post("/password-reset", controlador.changePassword)
+
+    app.post("/messages/send", controlador.sendMessage)
+
+    app.get("/messages/recieved/:userId", controlador.getUserMessages)
+
+    app.get("/message/:messageId", controlador.getMessageById)
 }

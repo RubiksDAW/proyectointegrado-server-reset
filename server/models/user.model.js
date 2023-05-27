@@ -21,7 +21,22 @@ const UserSchema = new mongoose.Schema({
     }
   ],
   // Lista de rutas favoritas del usuario. Guardamos solo las ids y no es obligatorio.
-  favouriteRoutes: [{type:String, required: false}]
+  favouriteRoutes: [{type:String, required: false}],
+  messagesSent: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Message",
+      required:false
+    }
+  ],
+  // Lista de mensajes recibidos por el usuario
+  messagesReceived: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Message",
+      required:false
+    }
+  ]
 }
 );
 // Propiedad virtual para calcular el numero de rutas totales creados por el usuario
