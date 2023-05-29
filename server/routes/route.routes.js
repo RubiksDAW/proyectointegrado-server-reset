@@ -8,10 +8,14 @@ module.exports = function (app) {
     app.post("/api/route/register", upload.array('images', 5), controllerRoute.register)
     // Ruta para obtener todas las rutas en bicicleta disponibles
     app.get("/api/route/getAll", controllerRoute.getAllRoutes)
+
+    app.get("/routes/getAll", controllerRoute.getAllRoutesNames)
     // Ruta para obtener una ruta según su nombre
     app.get("/route/:name", controllerRoute.getRouteByName)
     // Ruta para obtener una ruta según su id
     app.get("/route/id/:id", controllerRoute.findRouteById)
+    
+    app.get("/route/html/:id", controllerRoute.findRouteByIdHtml)
     //Ruta para eliminar una ruta según su id 
     app.delete("/route/delete/:id", controllerRoute.deleteRoute)
     // Ruta utilizada para añadir un comentario a la ruta

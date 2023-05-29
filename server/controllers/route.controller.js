@@ -100,14 +100,14 @@ exports.modifyRoute = async (req, res) => {
 };
 
 // Método para controlar 
-// exports.getAllRoutes = async (req, res) => {
-//   try {
-//     const routes = await Route.find();
-//     res.send({ routes });
-//   } catch (error) {
-//     res.status(500).send({ message: error.message });
-//   }
-// };
+exports.getAllRoutesNames = async (req, res) => {
+  try {
+    const routes = await Route.find();
+    res.send({ routes });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
 
 
 // Método para controlar la carga de rutas por página
@@ -150,6 +150,39 @@ exports.findRouteById = async (req, res) => {
       res.sendStatus(404);
     }
   };
+
+  exports.findRouteByIdHtml = async(req,res) =>{
+    const routeId = req.params.id; 
+  console.log(routeId);
+
+  // Buscamos la ruta en la base de datos por su ID
+  const routeAlreadyExist = await Route.findOne({ _id: routeId });
+  
+  if (routeAlreadyExist) {
+    console.log("encontrado");
+
+    // Construir la página HTML con los valores de la ruta
+    const html = `
+      <html>
+        <head>
+          <title>${routeAlreadyExist.name}</title>
+        </head>
+        <body>
+          <h1>${routeAlreadyExist.name}</h1>
+          <p>Descripción: ${routeAlreadyExist.description}</p>
+          <p>Distancia: ${routeAlreadyExist.distance}</p>
+          <p>Duración: ${routeAlreadyExist.duration}</p>
+          <!-- Agrega más contenido HTML según tus necesidades -->
+        </body>
+      </html>
+    `;
+    
+    res.send(html); // Enviar la página HTML como respuesta
+  } else {
+    console.log("no encontrado");
+    res.sendStatus(404); // Devolvemos un estado 404 si la ruta no se encuentra
+  }
+  }
 
   // Metodo para obtener una ruta según su nombre
 exports.getRouteByName = async(req,res) =>{
