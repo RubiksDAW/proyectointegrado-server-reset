@@ -163,18 +163,31 @@ exports.findRouteById = async (req, res) => {
 
     // Construir la página HTML con los valores de la ruta
     const html = `
-      <html>
-        <head>
-          <title>${routeAlreadyExist.name}</title>
-        </head>
-        <body>
-          <h1>${routeAlreadyExist.name}</h1>
-          <p>Descripción: ${routeAlreadyExist.description}</p>
-          <p>Distancia: ${routeAlreadyExist.distance}</p>
-          <p>Duración: ${routeAlreadyExist.duration}</p>
-          <!-- Agrega más contenido HTML según tus necesidades -->
-        </body>
-      </html>
+      <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Ruta</ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        (click)="isFav ? removeFavorite(route._id) : addFavorite(route._id)"
+      >
+        <ion-icon [name]="isFav ? 'heart' : 'heart-outline'"></ion-icon>
+      </ion-button>
+      <ion-button (click)="shareViaSocialMedia()">
+        <ion-icon name="share"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<div id="map"></div>
+<ion-button type="button" (click)="toggleIndicators()"
+  >Mostrar / ocultar indicaciones</ion-button
+>
+<div id="indicators"></div>
+
     `;
     
     res.send(html); // Enviar la página HTML como respuesta
