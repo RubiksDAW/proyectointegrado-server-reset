@@ -163,31 +163,52 @@ exports.findRouteById = async (req, res) => {
 
     // Construir la página HTML con los valores de la ruta
     const html = `
-      <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>Ruta</ion-title>
-    <ion-buttons slot="end">
-      <ion-button
-        (click)="isFav ? removeFavorite(route._id) : addFavorite(route._id)"
-      >
-        <ion-icon [name]="isFav ? 'heart' : 'heart-outline'"></ion-icon>
-      </ion-button>
-      <ion-button (click)="shareViaSocialMedia()">
-        <ion-icon name="share"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<div id="map"></div>
-<ion-button type="button" (click)="toggleIndicators()"
-  >Mostrar / ocultar indicaciones</ion-button
->
-<div id="indicators"></div>
-
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>Información de la Ruta</title>
+      <style>
+        /* Estilos CSS para la página */
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+        }
+    
+        h1 {
+          color: #333;
+        }
+    
+        p {
+          margin-bottom: 10px;
+        }
+    
+        .button {
+          display: inline-block;
+          padding: 10px 20px;
+          font-size: 18px;
+          color: #fff;
+          background-color: #ff6600;
+          border-radius: 5px;
+          text-decoration: none;
+        }
+    
+        .button:hover {
+          background-color: #ff5500;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Información de la Ruta</h1>
+      <p><strong>Nombre:</strong> ${routeAlreadyExist.name}</p>
+      <p><strong>Descripción:</strong> ${routeAlreadyExist.description}</p>
+      <p><strong>Distancia:</strong> ${routeAlreadyExist.distance} km</p>
+      <p><strong>Punto de Origen:</strong> ${routeAlreadyExist.origin}</p>
+      <p><strong>Punto de Destino:</strong> ${routeAlreadyExist.destination}</p>
+      <a href="https://drive.google.com/file/d/14uGHM7LLUKnF4coTgR2pzJd_Kc6BkM-N/view?usp=sharing" class="button">Descargar App</a>
+    </body>
+    </html>
     `;
     
     res.send(html); // Enviar la página HTML como respuesta
