@@ -176,7 +176,7 @@ exports.findRouteById = async (req, res) => {
         <p style="margin-bottom: 10px;"><strong>Distancia:</strong> ${routeAlreadyExist.distance} km</p>
         <p style="margin-bottom: 10px;"><strong>Punto de Origen:</strong> ${routeAlreadyExist.origin}</p>
         <p style="margin-bottom: 10px;"><strong>Punto de Destino:</strong> ${routeAlreadyExist.destination}</p>
-        <a href="https://drive.google.com/file/d/14uGHM7LLUKnF4coTgR2pzJd_Kc6BkM-N/view?usp=sharing" style="width:100%;display: inline-block; padding: 10px 20px; font-size: 18px; color: #fff; background-color: #ff6600; border-radius: 5px; text-decoration: none;">Descargar App</a>
+        <a href="https://drive.google.com/file/d/14uGHM7LLUKnF4coTgR2pzJd_Kc6BkM-N/view?usp=sharing" style="display: inline-block; padding: 10px 20px; font-size: 18px; color: #fff; background-color: #ff6600; border-radius: 5px; text-decoration: none;">Descargar App</a>
       </body>
       </html>
       `;
