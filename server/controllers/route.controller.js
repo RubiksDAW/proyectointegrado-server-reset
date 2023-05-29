@@ -168,55 +168,15 @@ exports.findRouteById = async (req, res) => {
       <head>
         <meta charset="UTF-8">
         <title>Información de la Ruta</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-          }
-  
-          h1 {
-            color: #333;
-          }
-  
-          p {
-            margin-bottom: 10px;
-          }
-  
-          .button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #ff6600;
-            border-radius: 5px;
-            text-decoration: none;
-          }
-  
-          @media screen and (max-width: 768px) {
-            body {
-              padding: 10px;
-            }
-  
-            h1 {
-              font-size: 24px;
-            }
-  
-            .button {
-              font-size: 16px;
-              padding: 8px 16px;
-            }
-          }
-        </style>
       </head>
       <body>
-        <h1>Información de la Ruta</h1>
-        <p><strong>Nombre:</strong> ${routeAlreadyExist.name}</p>
-        <p><strong>Descripción:</strong> ${routeAlreadyExist.description}</p>
-        <p><strong>Distancia:</strong> ${routeAlreadyExist.distance} km</p>
-        <p><strong>Punto de Origen:</strong> ${routeAlreadyExist.origin}</p>
-        <p><strong>Punto de Destino:</strong> ${routeAlreadyExist.destination}</p>
-        <a href="https://drive.google.com/file/d/14uGHM7LLUKnF4coTgR2pzJd_Kc6BkM-N/view?usp=sharing" class="button">Descargar App</a>
+        <h1 style="color: #333;">Información de la Ruta</h1>
+        <p style="margin-bottom: 10px;"><strong>Nombre:</strong> ${routeAlreadyExist.name}</p>
+        <p style="margin-bottom: 10px;"><strong>Descripción:</strong> ${routeAlreadyExist.description}</p>
+        <p style="margin-bottom: 10px;"><strong>Distancia:</strong> ${routeAlreadyExist.distance} km</p>
+        <p style="margin-bottom: 10px;"><strong>Punto de Origen:</strong> ${routeAlreadyExist.origin}</p>
+        <p style="margin-bottom: 10px;"><strong>Punto de Destino:</strong> ${routeAlreadyExist.destination}</p>
+        <a href="https://drive.google.com/file/d/14uGHM7LLUKnF4coTgR2pzJd_Kc6BkM-N/view?usp=sharing" style="display: inline-block; padding: 10px 20px; font-size: 18px; color: #fff; background-color: #ff6600; border-radius: 5px; text-decoration: none;">Descargar App</a>
       </body>
       </html>
       `;
@@ -227,6 +187,7 @@ exports.findRouteById = async (req, res) => {
       res.sendStatus(404); // Devolvemos un estado 404 si la ruta no se encuentra
     }
   };
+  
   
   
 
