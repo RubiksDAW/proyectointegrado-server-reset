@@ -151,72 +151,43 @@ exports.findRouteById = async (req, res) => {
     }
   };
 
-  exports.findRouteByIdHtml = async(req,res) =>{
-    const routeId = req.params.id; 
-  console.log(routeId);
-
-  // Buscamos la ruta en la base de datos por su ID
-  const routeAlreadyExist = await Route.findOne({ _id: routeId });
+  exports.findRouteByIdHtml = async (req, res) => {
+    const routeId = req.params.id;
+    console.log(routeId);
   
-  if (routeAlreadyExist) {
-    console.log("encontrado");
-
-    // Construir la página HTML con los valores de la ruta
-    const html = `
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-      <meta charset="UTF-8">
-      <title>Información de la Ruta</title>
-      <style>
-        /* Estilos CSS para la página */
-        body {
-          font-family: Arial, sans-serif;
-          margin: 0;
-          padding: 20px;
-        }
-    
-        h1 {
-          color: #333;
-        }
-    
-        p {
-          margin-bottom: 10px;
-        }
-    
-        .button {
-          display: inline-block;
-          padding: 10px 20px;
-          font-size: 18px;
-          color: #fff;
-          background-color: #ff6600;
-          border-radius: 5px;
-          text-decoration: none;
-        }
-    
-        .button:hover {
-          background-color: #ff5500;
-        }
-      </style>
-    </head>
-    <body>
-      <h1>Información de la Ruta</h1>
-      <p><strong>Nombre:</strong> ${routeAlreadyExist.name}</p>
-      <p><strong>Descripción:</strong> ${routeAlreadyExist.description}</p>
-      <p><strong>Distancia:</strong> ${routeAlreadyExist.distance} km</p>
-      <p><strong>Punto de Origen:</strong> ${routeAlreadyExist.origin}</p>
-      <p><strong>Punto de Destino:</strong> ${routeAlreadyExist.destination}</p>
-      <a href="https://drive.google.com/file/d/14uGHM7LLUKnF4coTgR2pzJd_Kc6BkM-N/view?usp=sharing" class="button">Descargar App</a>
-    </body>
-    </html>
-    `;
-    
-    res.send(html); // Enviar la página HTML como respuesta
-  } else {
-    console.log("no encontrado");
-    res.sendStatus(404); // Devolvemos un estado 404 si la ruta no se encuentra
-  }
-  }
+    // Buscamos la ruta en la base de datos por su ID
+    const routeAlreadyExist = await Route.findOne({ _id: routeId });
+  
+    if (routeAlreadyExist) {
+      console.log("encontrado");
+  
+      // Construir la página HTML con los valores de la ruta
+      const html = `
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <title>Información de la Ruta</title>
+      </head>
+      <body>
+        <h1 style="color: #333;">Información de la Ruta</h1>
+        <p><strong>Nombre:</strong> ${routeAlreadyExist.name}</p>
+        <p><strong>Descripción:</strong> ${routeAlreadyExist.description}</p>
+        <p><strong>Distancia:</strong> ${routeAlreadyExist.distance} km</p>
+        <p><strong>Punto de Origen:</strong> ${routeAlreadyExist.origin}</p>
+        <p><strong>Punto de Destino:</strong> ${routeAlreadyExist.destination}</p>
+        <a href="https://drive.google.com/file/d/14uGHM7LLUKnF4coTgR2pzJd_Kc6BkM-N/view?usp=sharing" style="display: inline-block; padding: 10px 20px; font-size: 18px; color: #fff; background-color: #ff6600; border-radius: 5px; text-decoration: none;" target="_blank">Descargar App</a>
+      </body>
+      </html>
+      `;
+  
+      res.send(html); // Enviar la página HTML como respuesta
+    } else {
+      console.log("no encontrado");
+      res.sendStatus(404); // Devolvemos un estado 404 si la ruta no se encuentra
+    }
+  };
+  
 
   // Metodo para obtener una ruta según su nombre
 exports.getRouteByName = async(req,res) =>{
