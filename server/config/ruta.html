@@ -35,6 +35,7 @@
         padding: 20px;
         border-radius: 5px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center; /* Añadido para centrar el contenido */
       }
 
       .button {
@@ -77,11 +78,13 @@
       <p><strong>Distancia:</strong> <%= distancia %> km</p>
       <p><strong>Punto de Origen:</strong> <%= origen %></p>
       <p><strong>Punto de Destino:</strong> <%= destino %></p>
-      <a
-        class="button"
-        href="https://drive.google.com/file/d/14uGHM7LLUKnF4coTgR2pzJd_Kc6BkM-N/view?usp=sharing"
-        >Descargar App</a
-      >
+      <div style="text-align: center">
+        <a
+          class="button"
+          href="https://drive.google.com/file/d/14uGHM7LLUKnF4coTgR2pzJd_Kc6BkM-N/view?usp=sharing"
+          >Descargar App</a
+        >
+      </div>
     </div>
   </body>
 </html>
