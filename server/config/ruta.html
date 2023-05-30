@@ -2,26 +2,42 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Información de la Ruta</title>
-  </head>
-  <body>
-    <h1 style="color: #333">Información de la Ruta</h1>
-    <p style="margin-bottom: 10px"><strong>Nombre:</strong> <%= nombre %></p>
-    <p style="margin-bottom: 10px">
-      <strong>Descripción:</strong> <%= descripcion %>
-    </p>
-    <p style="margin-bottom: 10px">
-      <strong>Distancia:</strong> <%= distancia %> km
-    </p>
-    <p style="margin-bottom: 10px">
-      <strong>Punto de Origen:</strong> <%= origen %>
-    </p>
-    <p style="margin-bottom: 10px">
-      <strong>Punto de Destino:</strong> <%= destino %>
-    </p>
-    <a
-      href="https://drive.google.com/file/d/14uGHM7LLUKnF4coTgR2pzJd_Kc6BkM-N/view?usp=sharing"
-      style="
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f7f7f7;
+      }
+
+      h1 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      p {
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      strong {
+        font-weight: bold;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .button {
         display: inline-block;
         padding: 10px 20px;
         font-size: 18px;
@@ -29,8 +45,43 @@
         background-color: #ff6600;
         border-radius: 5px;
         text-decoration: none;
-      "
-      >Descargar App</a
-    >
+        text-align: center;
+        transition: background-color 0.3s ease;
+      }
+
+      .button:hover {
+        background-color: #e65c00;
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 20px;
+        }
+        p {
+          font-size: 14px;
+        }
+        .container {
+          padding: 10px;
+        }
+        .button {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Información de la Ruta</h1>
+      <p><strong>Nombre:</strong> <%= nombre %></p>
+      <p><strong>Descripción:</strong> <%= descripcion %></p>
+      <p><strong>Distancia:</strong> <%= distancia %> km</p>
+      <p><strong>Punto de Origen:</strong> <%= origen %></p>
+      <p><strong>Punto de Destino:</strong> <%= destino %></p>
+      <a
+        class="button"
+        href="https://drive.google.com/file/d/14uGHM7LLUKnF4coTgR2pzJd_Kc6BkM-N/view?usp=sharing"
+        >Descargar App</a
+      >
+    </div>
   </body>
 </html>
