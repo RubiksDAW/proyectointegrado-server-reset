@@ -8,7 +8,7 @@ const Token = require("../models/token.model")
 const path = require('path')
 
 const ejs = require('ejs')
-const fs = require('fs');
+
 const sendEmail = require("../config/sendEmail.js")
 // const { ObjectId } = require('mongoose').Types;
 
@@ -577,11 +577,11 @@ exports.changePassword = async (req, res) => {
     // Guardar los cambios en la base de datos
     await user.save();
 
-    // Leer el archivo confirm.html
-    const confirmHTML = fs.readFileSync('confirm.html', 'utf8');
+    // Renderizar el archivo confirm.ejs con los datos necesarios
+    const html = await ejs.renderFile('confirm.ejs', { message: 'Contraseña restablecida exitosamente' });
 
-    // Enviar el contenido del archivo como respuesta
-    res.status(200).send(confirmHTML);
+    // Enviar el contenido renderizado como respuesta
+    res.status(200).send(html);
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message || 'Ha ocurrido un error al restablecer la contraseña' });
