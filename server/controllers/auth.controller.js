@@ -559,7 +559,12 @@ exports.changePassword = async (req, res) => {
 
     // Verificar si la contraseña y la confirmación coinciden
     if (password !== confirmPassword) {
-      return res.status(400).send({ message: 'La contraseña y la confirmación no coinciden' });
+      const templatePath = path.join(__dirname, '../config/fail.html');
+
+    // Renderizar el archivo confirm.ejs con los datos necesarios
+    const html = await ejs.renderFile(templatePath, { message: 'Contraseña restablecida exitosamente' });
+
+      return res.status(400).send(html,{ message: 'La contraseña y la confirmación no coinciden' });
     }
 
     // Obtener el usuario correspondiente al userId
