@@ -584,8 +584,13 @@ exports.changePassword = async (req, res) => {
     // Enviar el contenido renderizado como respuesta
     res.status(200).send(html);
   } catch (error) {
+    const templatePath = path.join(__dirname, '../config/fail.html');
+
+    // Renderizar el archivo confirm.ejs con los datos necesarios
+    const html = await ejs.renderFile(templatePath, { message: 'Contraseña restablecida exitosamente' });
+
     console.error(error);
-    return res.status(500).send({ message: error.message || 'Ha ocurrido un error al restablecer la contraseña' });
+    return res.status(500).send(html,{ message: error.message || 'Ha ocurrido un error al restablecer la contraseña' });
   }
 };
 
