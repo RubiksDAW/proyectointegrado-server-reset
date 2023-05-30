@@ -14,7 +14,7 @@ module.exports = function (app) {
     app.get("/route/:name", controllerRoute.getRouteByName)
     // Ruta para obtener una ruta según su id
     app.get("/route/id/:id", controllerRoute.findRouteById)
-    
+    // Ruta para compartir información de una ruta
     app.get("/route/html/:id", controllerRoute.findRouteByIdHtml)
     //Ruta para eliminar una ruta según su id 
     app.delete("/route/delete/:id", controllerRoute.deleteRoute)
