@@ -576,9 +576,10 @@ exports.changePassword = async (req, res) => {
 
     // Guardar los cambios en la base de datos
     await user.save();
+    const templatePath = path.join(__dirname, '../config/confirm.html');
 
     // Renderizar el archivo confirm.ejs con los datos necesarios
-    const html = await ejs.renderFile('confirm.ejs', { message: 'Contraseña restablecida exitosamente' });
+    const html = await ejs.renderFile(templatePath, { message: 'Contraseña restablecida exitosamente' });
 
     // Enviar el contenido renderizado como respuesta
     res.status(200).send(html);
