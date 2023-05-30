@@ -518,10 +518,44 @@ exports.resetPasswordPage = async (req, res) => {
 };
 
 
+// exports.changePassword = async (req, res) => {
+//   try {
+//     const { userId, token, password, confirmPassword } = req.body;
+//     console.log(req.body)
+
+//     // Verificar si la contraseña y la confirmación coinciden
+//     if (password !== confirmPassword) {
+//       return res.status(400).send({ message: 'La contraseña y la confirmación no coinciden' });
+//     }
+
+//     // Obtener el usuario correspondiente al userId
+//     const user = await User.findById(userId);
+
+//     // Verificar si el usuario existe y si el token es válido
+//     if (!user) {
+//       return res.status(400).send({ message: 'Token inválido o usuario no encontrado' });
+//     }
+    
+
+//     // Actualizar la contraseña del usuario
+//     const hashedPassword = await bcrypt.hash(password, 8);
+//     user.password = hashedPassword;
+    
+
+//     // Guardar los cambios en la base de datos
+//     await user.save();
+
+//     return res.status(200).send({ message: 'Contraseña restablecida exitosamente' });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).send({ message: error.message || 'Ha ocurrido un error al restablecer la contraseña' });
+//   }
+// };
+
 exports.changePassword = async (req, res) => {
   try {
     const { userId, token, password, confirmPassword } = req.body;
-    console.log(req.body)
+    console.log(req.body);
 
     // Verificar si la contraseña y la confirmación coinciden
     if (password !== confirmPassword) {
@@ -535,23 +569,24 @@ exports.changePassword = async (req, res) => {
     if (!user) {
       return res.status(400).send({ message: 'Token inválido o usuario no encontrado' });
     }
-    
 
     // Actualizar la contraseña del usuario
     const hashedPassword = await bcrypt.hash(password, 8);
     user.password = hashedPassword;
-    
 
     // Guardar los cambios en la base de datos
     await user.save();
 
-    return res.status(200).send({ message: 'Contraseña restablecida exitosamente' });
+    // Leer el archivo confirm.html
+    const confirmHTML = fs.readFileSync('confirm.html', 'utf8');
+
+    // Enviar el contenido del archivo como respuesta
+    res.status(200).send(confirmHTML);
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message || 'Ha ocurrido un error al restablecer la contraseña' });
   }
 };
-
 
 
 // Método para enviar un mensaje
