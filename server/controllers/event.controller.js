@@ -290,13 +290,21 @@ exports.registerUserToEvent = async (req, res) => {
     }
   };
   
-  exports.getEventsJoined = async(req,res)=>{
+  exports.getEventsJoined = async (req, res) => {
     try {
       const userId = req.params.userId;
-      const eventsJoined = await Event.find({ participantes: userId }).populate('ruta');
+      const currentDate = new Date(); // Obtener la fecha actual
+  
+      const eventsJoined = await Event.find({
+        participantes: userId,
+        fecha: { $gt: currentDate }, // Filtrar eventos con fecha posterior a la actual
+      }).populate('ruta');
   
       res.status(200).json(eventsJoined);
     } catch (error) {
-      res.status(500).json({ error: 'Ha ocurrido un error al obtener los eventos inscritos' });
+      res
+        .status(500)
+        .json({ error: 'Ha ocurrido un error al obtener los eventos inscritos' });
     }
-  }
+  };
+  
