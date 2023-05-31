@@ -123,23 +123,37 @@ exports.createEvent = async (req, res) => {
 //     res.status(500).json({ message: 'Error al obtener los eventos' });
 //   }
 // };
+// exports.getAllEvents = async (req, res) => {
+//   try {
+//     const page = parseInt(req.query.page) || 1; // Número de página, predeterminado: 1
+//     const pageSize = parseInt(req.query.pageSize) || 5;
+
+//     const currentDate = new Date(); // Obtener la fecha actual
+
+//     const totalEvents = await Event.countDocuments({ fecha: { $gt: currentDate } });
+//     const totalPages = Math.ceil(totalEvents / pageSize);
+//     // Solo se devolveran los eventos que sean posteriores a la fecha actual
+//     const events = await Event.find({ fecha: { $gt: currentDate } })
+//       .populate('ruta')
+//       .populate('participantes')
+//       .skip((page - 1) * pageSize)
+//       .limit(pageSize);
+
+//     res.send({ events, totalPages });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: 'Error al obtener los eventos' });
+//   }
+// };
+
 exports.getAllEvents = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Número de página, predeterminado: 1
-    const pageSize = parseInt(req.query.pageSize) || 5;
-
     const currentDate = new Date(); // Obtener la fecha actual
-
-    const totalEvents = await Event.countDocuments({ fecha: { $gt: currentDate } });
-    const totalPages = Math.ceil(totalEvents / pageSize);
     // Solo se devolveran los eventos que sean posteriores a la fecha actual
     const events = await Event.find({ fecha: { $gt: currentDate } })
       .populate('ruta')
       .populate('participantes')
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
-
-    res.send({ events, totalPages });
+    res.send({ events});
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Error al obtener los eventos' });

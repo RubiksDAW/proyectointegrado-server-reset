@@ -161,20 +161,30 @@ exports.getAllRoutesNames = async (req, res) => {
 
 
 // Método para controlar la carga de rutas por página
+// exports.getAllRoutes = async (req, res) => {
+//   try {
+//     const page = parseInt(req.query.page) || 1; // Número de página, predeterminado: 1
+//     const pageSize = parseInt(req.query.pageSize) || 5;
+//     const totalRoutes = await Route.countDocuments(); // Obtener el número total de rutas
+//     const totalPages = Math.ceil(totalRoutes / pageSize); // Calcular el número total de páginas
+    
+//     const routes = await Route.find()
+//       .skip((page - 1) * pageSize) // Saltar los resultados anteriores a la página actual
+//       .limit(pageSize); // Limitar el número de resultados por página
+//     console.log(routes)
+//     console.log(totalPages)
+//     console.log(totalRoutes)
+//     res.send({ routes, totalPages, totalRoutes});
+//   } catch (error) {
+//     res.status(500).send({ message: error.message });
+//   }
+// };
+// Método para controlar la carga de rutas por página
 exports.getAllRoutes = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Número de página, predeterminado: 1
-    const pageSize = parseInt(req.query.pageSize) || 5;
-    const totalRoutes = await Route.countDocuments(); // Obtener el número total de rutas
-    const totalPages = Math.ceil(totalRoutes / pageSize); // Calcular el número total de páginas
-    
     const routes = await Route.find()
-      .skip((page - 1) * pageSize) // Saltar los resultados anteriores a la página actual
-      .limit(pageSize); // Limitar el número de resultados por página
-    console.log(routes)
-    console.log(totalPages)
-    console.log(totalRoutes)
-    res.send({ routes, totalPages, totalRoutes});
+      
+    res.send({routes});
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
