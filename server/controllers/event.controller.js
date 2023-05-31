@@ -176,9 +176,11 @@ exports.updateEventById = async (req, res) => {
       const modifiedData = {
         ruta: req.body.ruta,
         fecha: req.body.fecha,
+        ubicacion:req.body.ubicacion,
         participantes: req.body.participantes,
         maxParticipantes: req.body.maxParticipantes,
       };
+      
       console.log(modifiedData);
 
       const modifiedEvent = await Event.findByIdAndUpdate(id, modifiedData, { new: true });

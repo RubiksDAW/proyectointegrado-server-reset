@@ -52,14 +52,71 @@ exports.register = async (req, res) => {
 
 
 // Método para modificar una ruta
-exports.modifyRoute = async (req, res) => {
- console.log(req.body)
-  try {
-    // console.log(req.params.formData)
-      const routeId = req.body._id;
-      console.log(routeId)
-      // const imageFileNames = req.files.map(file => file.filename)
+// exports.modifyRoute = async (req, res) => {
+//  console.log(req.body)
+//   try {
+//     // console.log(req.params.formData)
+//       const routeId = req.body._id;
+//       console.log(routeId)
+//       // const imageFileNames = req.files.map(file => file.filename)
 
+//       const galeria = req.files.map((file) => {
+//         return new Promise((resolve, reject) => {
+//           cloudinary.uploader.upload(file.path, (err, result) => {
+//             if (err) {
+//               reject(err);
+//             } else {
+//               resolve(result.secure_url);
+//             }
+//           });
+//         });
+//       });
+
+      
+//       // Guardamos en un objeto la información que nos llega en el cuerpo de la petición.
+//       const modifiedData = {
+//           name: req.body.name,
+//           difficulty_level: req.body.difficulty_level,
+//           distance: req.body.distance,
+//           location: req.body.location,
+//           description: req.body.description,
+//           origin: req.body.origin,
+//           destination: req.body.destination,
+//           // Esperamos a que terminen de subirse todas las imagenes antes de asignarlas a la propiedad del objeto
+//           images: await Promise.all(galeria),
+          
+//       };
+//       console.log(modifiedData)
+
+//       // Se busca la ruta por su id y se sustituye por el objeto modifiedData creado
+//       const modifiedRoute = await Route.findByIdAndUpdate(routeId, modifiedData, { new: true });
+      
+//       if (!modifiedRoute) {
+//           return res.status(404).send({ message: 'Ruta no encontrada' });
+//       }
+//       // Se devuelve 
+//       res.send({ route: modifiedRoute });
+//   } catch (error) {
+//       res.status(500).send({ message: error.message });
+//   }
+// };
+
+exports.modifyRoute = async (req, res) => {
+  try {
+    const routeId = req.body._id;
+
+    let modifiedData = {
+      name: req.body.name,
+      difficulty_level: req.body.difficulty_level,
+      distance: req.body.distance,
+      location: req.body.location,
+      description: req.body.description,
+      origin: req.body.origin,
+      destination: req.body.destination,
+      images: [], // Inicialmente vacío
+    };
+
+    if (req.files.length > 0) {
       const galeria = req.files.map((file) => {
         return new Promise((resolve, reject) => {
           cloudinary.uploader.upload(file.path, (err, result) => {
@@ -72,32 +129,23 @@ exports.modifyRoute = async (req, res) => {
         });
       });
 
-      
-      // Guardamos en un objeto la información que nos llega en el cuerpo de la petición.
-      const modifiedData = {
-          name: req.body.name,
-          difficulty_level: req.body.difficulty_level,
-          distance: req.body.distance,
-          location: req.body.location,
-          description: req.body.description,
-          origin: req.body.origin,
-          destination: req.body.destination,
-          // Esperamos a que terminen de subirse todas las imagenes antes de asignarlas a la propiedad del objeto
-          images: await Promise.all(galeria),
-          
-      };
-      console.log(modifiedData)
+      // Esperamos a que todas las nuevas imágenes se suban antes de asignarlas a `modifiedData.images`
+      modifiedData.images = await Promise.all(galeria);
+    } else {
+      // No se proporcionaron imágenes nuevas, usar las imágenes existentes de la ruta
+      const route = await Route.findById(routeId);
+      modifiedData.images = route.images;
+    }
 
-      // Se busca la ruta por su id y se sustituye por el objeto modifiedData creado
-      const modifiedRoute = await Route.findByIdAndUpdate(routeId, modifiedData, { new: true });
-      
-      if (!modifiedRoute) {
-          return res.status(404).send({ message: 'Ruta no encontrada' });
-      }
-      // Se devuelve 
-      res.send({ route: modifiedRoute });
+    const modifiedRoute = await Route.findByIdAndUpdate(routeId, modifiedData, { new: true });
+
+    if (!modifiedRoute) {
+      return res.status(404).send({ message: 'Ruta no encontrada' });
+    }
+
+    res.send({ route: modifiedRoute });
   } catch (error) {
-      res.status(500).send({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 };
 
@@ -123,8 +171,10 @@ exports.getAllRoutes = async (req, res) => {
     const routes = await Route.find()
       .skip((page - 1) * pageSize) // Saltar los resultados anteriores a la página actual
       .limit(pageSize); // Limitar el número de resultados por página
-
-    res.send({ routes, totalPages });
+    console.log(routes)
+    console.log(totalPages)
+    console.log(totalRoutes)
+    res.send({ routes, totalPages, totalRoutes});
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
@@ -346,6 +396,31 @@ exports.deleteCommentById = async (req, res) => {
     res.status(500).json({ message: "Error al eliminar el comentario" });
   }
 };
+
+exports.uploadRoutePic = async (req,res)=>{
+
+  try {
+    const routeId = req.params.routeId;
+
+  const galeria = req.files.map((file) => {
+    return new Promise((resolve, reject) => {
+      cloudinary.uploader.upload(file.path, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result.secure_url);
+        }
+      });
+    });
+  });
+
+  const route = await Route.findByIdAndUpdate(routeId, {images:await Promise.all(galeria)}, {new:true})
+  res.status(200).json({ message: 'Imagen subida correctamente', route });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+}
 
 
 

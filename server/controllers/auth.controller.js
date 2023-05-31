@@ -186,78 +186,138 @@ exports.profile = async (req, res) => {
 
 // Metodo para editar el perfil de nuestro usuario.
 // Actualmente no es disponible actualizar la contraseña.
-exports.editProfile = async (req, res) => {
-    try {
-      const { nick, email, age, description} = req.body;
-      const { id } = req.params;
+// exports.editProfile = async (req, res) => {
+//     try {
+//       const { nick, email, age, description} = req.body;
+//       const { id } = req.params;
   
-      const galeria = req.files ? await Promise.all(req.files.map((file) => {
-        return new Promise((resolve, reject) => {
-          cloudinary.uploader.upload(file.path, (err, result) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(result.secure_url);
-            }
-          });
-        });
-      })) : [];
+//       const galeria = req.files ? await Promise.all(req.files.map((file) => {
+//         return new Promise((resolve, reject) => {
+//           cloudinary.uploader.upload(file.path, (err, result) => {
+//             if (err) {
+//               reject(err);
+//             } else {
+//               resolve(result.secure_url);
+//             }
+//           });
+//         });
+//       })) : [];
       
-      // Buscamos al usuario por su ID en la base de datos
-      const user = await User.findById(id);
+//       // Buscamos al usuario por su ID en la base de datos
+//       const user = await User.findById(id);
   
-      // Si el usuario no existe, devolvemos un error 404
-      if (!user) {
-        return res.status(404).send({ message: 'No se ha encontrado al usuario especificado' });
-      }
+//       // Si el usuario no existe, devolvemos un error 404
+//       if (!user) {
+//         return res.status(404).send({ message: 'No se ha encontrado al usuario especificado' });
+//       }
   
-      // Actualizamos los campos del usuario que nos hayan sido enviados en el cuerpo de la solicitud
-      if (nick) {
-        // Verificamos que el nuevo apodo no contenga palabras prohibidas
-        for (let i = 0; i < bannedWords.length; i++) {
-          if (nick.toUpperCase().includes(bannedWords[i].toLocaleUpperCase())) {
-            return res.status(400).send({ message: 'El nuevo apodo contiene palabras prohibidas' });
-          }
-        }
-        user.nick = nick;
-      }
-      // Comprobamos si viene información del mail para actualizar
-      if (email) {
-        user.email = email;
-      }
-    //   if (password) {
-    //     const hashedPassword = await bcrypt.hash(password, 8);
-    //     user.password = hashedPassword;
-    //   }
-      if (age) {
-        user.age = age;
-      }
+//       // Actualizamos los campos del usuario que nos hayan sido enviados en el cuerpo de la solicitud
+//       if (nick) {
+//         // Verificamos que el nuevo apodo no contenga palabras prohibidas
+//         for (let i = 0; i < bannedWords.length; i++) {
+//           if (nick.toUpperCase().includes(bannedWords[i].toLocaleUpperCase())) {
+//             return res.status(400).send({ message: 'El nuevo apodo contiene palabras prohibidas' });
+//           }
+//         }
+//         user.nick = nick;
+//       }
+//       // Comprobamos si viene información del mail para actualizar
+//       if (email) {
+//         user.email = email;
+//       }
+//     //   if (password) {
+//     //     const hashedPassword = await bcrypt.hash(password, 8);
+//     //     user.password = hashedPassword;
+//     //   }
+//       if (age) {
+//         user.age = age;
+//       }
 
-      // Comprobamos si tenemos descripción a actualizar
-      if (description) {
-        user.description = description;
-      }
+//       // Comprobamos si tenemos descripción a actualizar
+//       if (description) {
+//         user.description = description;
+//       }
 
-      // Comprobamos si tenemos imagen de perfil que actualizar
-      if (galeria) {
-        user.imageURL = galeria;
-      }
-    // No se pueden modificar los roles actualmente
-    //   if (roles) {
-    //     const assignedRoles = await Role.find({ name: { $in: roles } }, '_id');
-    //     user.roles = assignedRoles;
-    //   }
-      // Despues de haber reasignado los valores del objeto Usuario a editar
-      // Guardamos los cambios en la base de datos
-      await user.save();
+//       // Comprobamos si tenemos imagen de perfil que actualizar
+//       if (galeria) {
+//         user.imageURL = galeria;
+//       }
+//     // No se pueden modificar los roles actualmente
+//     //   if (roles) {
+//     //     const assignedRoles = await Role.find({ name: { $in: roles } }, '_id');
+//     //     user.roles = assignedRoles;
+//     //   }
+//       // Despues de haber reasignado los valores del objeto Usuario a editar
+//       // Guardamos los cambios en la base de datos
+//       await user.save();
   
-      return res.status(200).send({ message: 'El usuario se ha modificado correctamente' });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send({ message: error.message || 'Ha habido un error al modificar al usuario' });
+//       return res.status(200).send({ message: 'El usuario se ha modificado correctamente' });
+//     } catch (error) {
+//       console.error(error);
+//       return res.status(500).send({ message: error.message || 'Ha habido un error al modificar al usuario' });
+//     }
+//   };
+exports.editProfile = async (req, res) => {
+  try {
+    const { nick, email, age, description } = req.body;
+    const { id } = req.params;
+
+    let galeria = [];
+    if (req.files && req.files.length > 0) {
+      galeria = await Promise.all(
+        req.files.map((file) => {
+          return new Promise((resolve, reject) => {
+            cloudinary.uploader.upload(file.path, (err, result) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(result.secure_url);
+              }
+            });
+          });
+        })
+      );
     }
-  };
 
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).send({ message: 'No se ha encontrado al usuario especificado' });
+    }
+
+    if (nick) {
+      for (let i = 0; i < bannedWords.length; i++) {
+        if (nick.toUpperCase().includes(bannedWords[i].toLocaleUpperCase())) {
+          return res.status(400).send({ message: 'El nuevo apodo contiene palabras prohibidas' });
+        }
+      }
+      user.nick = nick;
+    }
+
+    if (email) {
+      user.email = email;
+    }
+
+    if (age) {
+      user.age = age;
+    }
+
+    if (description) {
+      user.description = description;
+    }
+
+    if (req.files && req.files.length > 0) {
+      user.imageURL = galeria;
+    }
+
+    await user.save();
+
+    return res.status(200).send({ message: 'El usuario se ha modificado correctamente' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: error.message || 'Ha habido un error al modificar al usuario' });
+  }
+};
 // Metodo para eliminar un usuario
 exports.deleteUser = async (req,res)=>{
     try {

@@ -26,4 +26,6 @@ module.exports = function (app) {
     app.put("/route/:routeId/modify",upload.array('images', 5),controllerRoute.modifyRoute)
 
     app.delete("/route/comments/delete/:commentId", controllerRoute.deleteCommentById)
+
+    app.put("/route/updateRoutePic/:routeId", upload.array('images',5), controllerRoute.uploadRoutePic)
 }
