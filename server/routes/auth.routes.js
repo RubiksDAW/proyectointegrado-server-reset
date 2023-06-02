@@ -57,4 +57,6 @@ module.exports = function (app) {
     app.get("/messages/recieved/:userId", controlador.getUserMessages)
 
     app.get("/message/:messageId", controlador.getMessageById)
+    
+    app.get("/api/messages/:userId1/:userId2", controlador.getMessagesBetweenUsers);
 }

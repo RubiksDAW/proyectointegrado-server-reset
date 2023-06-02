@@ -698,37 +698,57 @@ exports.sendMessage = async (req, res) => {
 
 
 // Método para obtener los mensajes recibidos por un usuario
+// exports.getUserMessages = async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+//     console.log(userId)
+//     // Verificar que el usuario exista en la base de datos
+//     const user = await User.findById(userId).populate({
+//       path: 'messagesReceived',
+//       populate: [
+//         { path: 'sender', model: 'User' },
+//         { path: 'recipient', model: 'User' }
+//       ]
+//     });
+
+//     if (!user) {
+//       return res.status(404).json({ message: 'El usuario no existe' });
+//     }
+
+//     const receivedMessages = user.messagesReceived;
+
+//     console.log(receivedMessages);
+//     return res.status(200).json(receivedMessages);
+//   } catch (error) {
+//     console.error('Error al obtener los mensajes del usuario:', error);
+//     return res.status(500).json({ message: 'Error al obtener los mensajes del usuario' });
+//   }
+// };
 exports.getUserMessages = async (req, res) => {
   try {
     const userId = req.params.userId;
+    console.log(userId);
 
-    // Verificar que el usuario exista en la base de datos
-    const user = await User.findById(userId).populate({
-      path: 'messagesReceived',
-      populate: { path: 'sender', model: 'User' }
-    });
+    // Buscar todos los mensajes en los que la propiedad "recipient" coincida con "userId"
+    const messages = await Message.find({ recipient: userId }).populate([
+      { path: 'sender', model: 'User' },
+      { path: 'recipient', model: 'User' }
+    ]);
 
-    if (!user) {
-      return res.status(404).json({ message: 'El usuario no existe' });
-    }
-
-    const receivedMessages = user.messagesReceived;
-
-    console.log(receivedMessages);
-    return res.status(200).json(receivedMessages);
+    console.log(messages);
+    return res.status(200).json(messages);
   } catch (error) {
     console.error('Error al obtener los mensajes del usuario:', error);
     return res.status(500).json({ message: 'Error al obtener los mensajes del usuario' });
   }
 };
-
 exports.getMessageById = async (req, res) => {
   console.log(req.params)
   try {
     const messageId = req.params.messageId;
 
     // Verificar que el mensaje exista en la base de datos
-    const message = await Message.findById(messageId).populate('sender');;
+    const message = await Message.findById(messageId).populate('sender').populate('recipient');;
 
     if (!message) {
       return res.status(404).json({ message: 'El mensaje no existe' });
@@ -738,6 +758,35 @@ exports.getMessageById = async (req, res) => {
   } catch (error) {
     console.error('Error al obtener el mensaje:', error);
     return res.status(500).json({ message: 'Error al obtener el mensaje' });
+  }
+};
+
+
+exports.getMessagesBetweenUsers = async (req, res) => {
+  try {
+    const userId1 = req.params.userId1;
+    const userId2 = req.params.userId2;
+
+    // Check if both users exist in the database
+    const user1 = await User.findById(userId1);
+    const user2 = await User.findById(userId2);
+
+    if (!user1 || !user2) {
+      return res.status(404).json({ message: 'One or both users do not exist' });
+    }
+
+    // Find all messages between the two users
+    const messages = await Message.find({
+      $or: [
+        { sender: userId1, recipient: userId2 },
+        { sender: userId2, recipient: userId1 }
+      ]
+    });
+
+    return res.status(200).json(messages);
+  } catch (error) {
+    console.error('Error while retrieving messages between users:', error);
+    return res.status(500).json({ message: 'Error while retrieving messages between users' });
   }
 };
 
