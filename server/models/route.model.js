@@ -1,6 +1,7 @@
 // Importamos mongoose
 const mongoose = require("mongoose");
 
+const Event = require('./event.model')
 // Declaramos un schema para la creación de rutas.
 const RouteSchema = new mongoose.Schema({
   // Nombre de la ruta
@@ -25,6 +26,12 @@ const RouteSchema = new mongoose.Schema({
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment", required:false}],
 
   reports:[{ type: mongoose.Schema.Types.ObjectId, ref: "Report", required:false}]
+});
+
+RouteSchema.pre("remove", async function (next) {
+  const route = this;
+  await Event.deleteMany({ ruta: route._id });
+  next();
 });
 
 const Route = mongoose.model("Route", RouteSchema);
